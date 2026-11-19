@@ -1,0 +1,366 @@
+###Full Project Structure
+
+UnoGame/
+│
+├── UnoGame.sln
+│
+├── Frontend/
+│   │
+│   └── UnoGame.APP/                         # Blazor Web App
+│       │
+│       ├── Components/
+│       │   ├── Layout/
+│       │   │   ├── MainLayout.razor
+│       │   │   └── NavMenu.razor
+│       │   │
+│       │   └── Shared/
+│       │       ├── UnoCard.razor             # UNO Card UI
+│       │       ├── PlayerCard.razor          # Player Information UI
+│       │       ├── GameBoard.razor           # Game Board UI
+│       │       ├── GameTimer.razor           # Turn Timer UI
+│       │       ├── ChatBox.razor              # Game Chat UI
+│       │       ├── RoomCard.razor             # Room UI
+│       │       └── Loading.razor
+│       │
+│       ├── Pages/
+│       │   │
+│       │   ├── Auth/
+│       │   │   ├── Login.razor
+│       │   │   └── Register.razor
+│       │   │
+│       │   ├── Dashboard/
+│       │   │   └── Index.razor
+│       │   │
+│       │   ├── GameMode/
+│       │   │   ├── SelectGameMode.razor
+│       │   │   ├── ClassicInfo.razor
+│       │   │   └── NoMercyInfo.razor
+│       │   │
+│       │   ├── Room/
+│       │   │   ├── CreateRoom.razor
+│       │   │   ├── JoinRoom.razor
+│       │   │   └── RoomLobby.razor
+│       │   │
+│       │   ├── Game/
+│       │   │   ├── GamePlay.razor
+│       │   │   ├── GameResult.razor
+│       │   │   └── GameHistory.razor
+│       │   │
+│       │   ├── Leaderboard/
+│       │   │   └── Index.razor
+│       │   │
+│       │   └── Profile/
+│       │       └── Index.razor
+│       │
+│       ├── Share/
+│       │   ├── Services/
+│       │   │   ├── AuthClient.cs
+│       │   │   ├── RoomClient.cs
+│       │   │   ├── GameClient.cs
+│       │   │   └── LeaderboardClient.cs
+│       │   │
+│       │   ├── Hubs/
+│       │   │   └── GameHubClient.cs
+│       │   │
+│       │   ├── Models/
+│       │   │   └── UI Models only
+│       │   │
+│       │   └── Helpers/
+│       │       ├── TokenHelper.cs
+│       │       └── GameHelper.cs
+│       │
+│       ├── wwwroot/
+│       │   ├── css/
+│       │   ├── js/
+│       │   └── images/
+│       │
+│       ├── Program.cs
+│       └── appsettings.json
+│
+│
+├── API/
+│   │
+│   └── UnoGame.Gateway/                     # API Gateway (YARP)
+│       │
+│       ├── Configuration/
+│       │   └── GatewayConfig.cs
+│       │
+│       ├── Middleware/
+│       │   └── ExceptionMiddleware.cs
+│       │
+│       ├── Program.cs
+│       └── appsettings.json
+│
+│
+└── Backend/
+    │
+    ├── UnoGame.API/                         # ASP.NET Core API Host
+    │   │
+    │   ├── Controllers/
+    │   │   ├── AuthController.cs
+    │   │   ├── RoomController.cs
+    │   │   ├── GameController.cs
+    │   │   ├── HistoryController.cs
+    │   │   └── LeaderboardController.cs
+    │   │
+    │   ├── Hubs/
+    │   │   └── GameHub.cs                   # SignalR Hub
+    │   │
+    │   ├── Middleware/
+    │   │   └── GlobalExceptionMiddleware.cs
+    │   │
+    │   ├── Extensions/
+    │   │   ├── ServiceExtensions.cs
+    │   │   └── MiddlewareExtensions.cs
+    │   │
+    │   ├── Program.cs
+    │   └── appsettings.json
+    │
+    │
+    ├── UnoGame.Domain/                      # Domain Layer
+    │   │
+    │   ├── Common/
+    │   │   ├── Entities/
+    │   │   │   ├── BaseEntity.cs
+    │   │   │   └── AuditableEntity.cs
+    │   │   │
+    │   │   ├── Interfaces/
+    │   │   │   └── (Domain interfaces)
+    │   │   │
+    │   │   └── Enums/
+    │   │       ├── GameMode.cs
+    │   │       ├── GameStatus.cs
+    │   │       ├── PlayerStatus.cs
+    │   │       └── CardColor.cs
+    │   │
+    │   ├── Entities/
+    │   │   ├── GameRoom.cs
+    │   │   ├── RoomPlayer.cs
+    │   │   ├── Game.cs
+    │   │   ├── GamePlayer.cs
+    │   │   ├── GameCard.cs
+    │   │   ├── MatchHistory.cs
+    │   │   └── PlayerStatistic.cs
+    │   │
+    │   ├── GameModes/
+    │   │   │
+    │   │   ├── Common/
+    │   │   │   ├── Interfaces/
+    │   │   │   │   ├── IGameEngine.cs
+    │   │   │   │   ├── IGameRule.cs
+    │   │   │   │   └── ICardAction.cs
+    │   │   │   │
+    │   │   │   ├── Models/
+    │   │   │   │   ├── GameState.cs
+    │   │   │   │   ├── GameConfiguration.cs
+    │   │   │   │   ├── TurnInfo.cs
+    │   │   │   │   └── MoveResult.cs
+    │   │   │   │
+    │   │   │   ├── Enums/
+    │   │   │   │   ├── CardType.cs
+    │   │   │   │   └── CardZone.cs
+    │   │   │   │
+    │   │   │   └── Services/
+    │   │   │       ├── DeckService.cs
+    │   │   │       └── TurnService.cs
+    │   │   │
+    │   │   ├── Classic/
+    │   │   │   ├── ClassicGameEngine.cs
+    │   │   │   ├── ClassicGameState.cs
+    │   │   │   ├── ClassicCardService.cs
+    │   │   │   │
+    │   │   │   ├── Rules/
+    │   │   │   │   ├── ClassicStandardRule.cs
+    │   │   │   │   ├── ClassicStackingRule.cs
+    │   │   │   │   └── ClassicSevenZeroRule.cs
+    │   │   │   │
+    │   │   │   ├── Actions/
+    │   │   │   │   ├── SkipAction.cs
+    │   │   │   │   ├── ReverseAction.cs
+    │   │   │   │   ├── DrawTwoAction.cs
+    │   │   │   │   ├── WildAction.cs
+    │   │   │   │   └── WildDrawFourAction.cs
+    │   │   │   │
+    │   │   │   └── Validators/
+    │   │   │       ├── ClassicCardValidator.cs
+    │   │   │       └── ClassicTurnValidator.cs
+    │   │   │
+    │   │   ├── NoMercy/
+    │   │   │   ├── NoMercyGameEngine.cs
+    │   │   │   ├── NoMercyGameState.cs
+    │   │   │   ├── NoMercyCardService.cs
+    │   │   │   │
+    │   │   │   ├── Rules/
+    │   │   │   │   ├── NoMercyStandardRule.cs
+    │   │   │   │   ├── MercyRule.cs
+    │   │   │   │   ├── StackingRule.cs
+    │   │   │   │   └── EliminationRule.cs
+    │   │   │   │
+    │   │   │   ├── Actions/
+    │   │   │   │   ├── SkipEveryoneAction.cs
+    │   │   │   │   ├── DrawFourAction.cs
+    │   │   │   │   ├── DrawSixAction.cs
+    │   │   │   │   ├── DrawTenAction.cs
+    │   │   │   │   └── SpecialWildAction.cs
+    │   │   │   │
+    │   │   │   └── Validators/
+    │   │   │       ├── NoMercyCardValidator.cs
+    │   │   │       └── NoMercyTurnValidator.cs
+    │   │   │
+    │   │   ├── Custom/
+    │   │   │   ├── CustomGameEngine.cs
+    │   │   │   ├── CustomGameState.cs
+    │   │   │   ├── Rules/
+    │   │   │   │   └── CustomRule.cs
+    │   │   │   └── Validators/
+    │   │   │       └── CustomRuleValidator.cs
+    │   │   │
+    │   │   ├── Team/
+    │   │   │   ├── TeamGameEngine.cs
+    │   │   │   ├── TeamGameState.cs
+    │   │   │   ├── Rules/
+    │   │   │   │   └── TeamRule.cs
+    │   │   │   └── Validators/
+    │   │   │       └── TeamValidator.cs
+    │   │   │
+    │   │   └── GameModeFactory.cs
+    │   │
+    │   ├── Constants/
+    │   │   └── GameConstants.cs
+    │   │
+    │   └── Exceptions/
+    │       ├── InvalidMoveException.cs
+    │       └── GameNotFoundException.cs
+    │
+    │
+    ├── UnoGame.Application/                 # Application Layer
+    │   │
+    │   ├── Features/
+    │   │   │
+    │   │   ├── Auth/
+    │   │   │   ├── Services/
+    │   │   │   ├── UseCases/
+    │   │   │   └── Validators/
+    │   │   │
+    │   │   ├── Room/
+    │   │   │   ├── Services/
+    │   │   │   ├── UseCases/
+    │   │   │   │   ├── CreateRoom/
+    │   │   │   │   ├── JoinRoom/
+    │   │   │   │   └── LeaveRoom/
+    │   │   │   └── Validators/
+    │   │   │
+    │   │   ├── Game/
+    │   │   │   ├── Services/
+    │   │   │   ├── UseCases/
+    │   │   │   │   ├── StartGame/
+    │   │   │   │   ├── PlayCard/
+    │   │   │   │   ├── DrawCard/
+    │   │   │   │   ├── CallUno/
+    │   │   │   │   └── EndGame/
+    │   │   │   └── Validators/
+    │   │   │
+    │   │   ├── History/
+    │   │   │   └── UseCases/
+    │   │   │
+    │   │   └── Leaderboard/
+    │   │       └── UseCases/
+    │   │
+    │   ├── Interfaces/
+    │   │   ├── Repositories/
+    │   │   │   ├── IGameRepository.cs
+    │   │   │   ├── IRoomRepository.cs
+    │   │   │   └── IUserRepository.cs
+    │   │   │
+    │   │   └── Services/
+    │   │       ├── IJwtService.cs
+    │   │       └── IGameNotificationService.cs
+    │   │
+    │   └── DependencyInjection.cs
+    │
+    │
+    ├── UnoGame.Infrastructure/              # Infrastructure Layer
+    │   │
+    │   ├── Persistence/
+    │   │   ├── ApplicationDbContext.cs
+    │   │   │
+    │   │   ├── Configurations/
+    │   │   │   ├── GameConfiguration.cs
+    │   │   │   ├── GameRoomConfiguration.cs
+    │   │   │   └── GamePlayerConfiguration.cs
+    │   │   │
+    │   │   ├── Repositories/
+    │   │   │   ├── GameRepository.cs
+    │   │   │   ├── RoomRepository.cs
+    │   │   │   └── UserRepository.cs
+    │   │   │
+    │   │   └── Migrations/
+    │   │
+    │   ├── Identity/
+    │   │   ├── ApplicationUser.cs
+    │   │   └── IdentityService.cs
+    │   │
+    │   ├── Authentication/
+    │   │   └── JwtService.cs
+    │   │
+    │   ├── Services/
+    │   │   └── GameNotificationService.cs
+    │   │
+    │   └── DependencyInjection.cs
+    │
+    │
+    └── UnoGame.Shared/                      # Shared Contracts / DTOs
+        │
+        ├── DTOs/
+        │   ├── Auth/
+        │   │   ├── LoginRequest.cs
+        │   │   └── RegisterRequest.cs
+        │   │
+        │   ├── Room/
+        │   │   ├── CreateRoomRequest.cs
+        │   │   ├── JoinRoomRequest.cs
+        │   │   └── RoomResponse.cs
+        │   │
+        │   ├── Game/
+        │   │   ├── StartGameRequest.cs
+        │   │   ├── PlayCardRequest.cs
+        │   │   ├── DrawCardRequest.cs
+        │   │   ├── GameResponse.cs
+        │   │   └── PlayerGameResponse.cs
+        │   │
+        │   └── Leaderboard/
+        │       └── LeaderboardResponse.cs
+        │
+        ├── Contracts/
+        │   ├── IGameClient.cs
+        │   └── IGameServer.cs
+        │
+        └── Constants/
+            └── ApiRoutes.cs
+
+
+###Project တစ်ခုချင်းစီရဲ့ တာဝန်
+
+Project	တာဝန်
+UnoGame.APP	Blazor UI, Pages, Components
+UnoGame.Gateway	API Gateway, YARP Routing
+UnoGame.API	Controllers, SignalR Hub, API Host
+UnoGame.Domain	Game Entities, Game Modes, Rules
+UnoGame.Application	Use Cases, Business Workflow
+UnoGame.Infrastructure	EF Core, SQL Server, Identity, JWT
+UnoGame.Shared	DTOs, API Contracts
+
+
+###Game Mode တစ်ခုချင်းစီရဲ့ အလုပ်လုပ်ပုံ
+ဥပမာ User က No Mercy ရွေးလိုက်ရင် -
+1. Frontend က GameMode.NoMercy ကို API ဆီပို့မယ်။
+2. API က Application Layer ကို ခေါ်မယ်။
+3. Application က GameModeFactory ကို အသုံးပြုပြီး No Mercy Engine ကို ရွေးမယ်။
+4. NoMercyGameEngine က No Mercy Rules နဲ့ Game State ကို စီမံမယ်။
+5. SignalR က Player အားလုံးဆီ Game State Update ပို့မယ်။
+6. Infrastructure က လိုအပ်တဲ့ Game Data တွေကို SQL Server မှာ သိမ်းမယ်။
+အရေးကြီးတဲ့ Design အချက် ၃ ခု
+- Classic နဲ့ No Mercy တို့ရဲ့ Card Rules, Actions, Validators ကို အချင်းချင်း မရောပါနဲ့။
+- Player, Room, Authentication, Match History လို Common Features တွေကို ပြန်သုံးပါ။
+- Game State ကို Server ကပဲ ထိန်းချုပ်ပါ။ Client က ပို့တဲ့ Card Move ကို Server က Validate လုပ်ပြီးမှ လက်ခံပါ။
+

@@ -1,0 +1,9 @@
+Location	CancellationToken
+API Controllers	Yes
+Application Services	Yes
+Repository Interfaces	Yes
+EF Core Queries	Yes
+SaveChangesAsync	Yes
+External HTTP Requests	Yes
+Game Engine Synchronous Logic	မလိုအပ်တာများ
+SignalR Hub Methods	လိုအပ်တဲ့ Async Operations တွေမှာ Yes

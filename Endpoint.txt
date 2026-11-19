@@ -1,0 +1,256 @@
+UNO Multiplayer Project အတွက် API Endpoints အပြည့်အစုံ ကို အောက်မှာ Module အလိုက် ခွဲပေးထားပါတယ်။
+
+သုံးမယ့် Architecture ကတော့ -
+- ASP.NET Core Web API
+- Blazor
+- SQL Server + EF Core
+- SignalR
+- JWT Authentication
+- YARP API Gateway
+- Game Modes: Classic, No Mercy, Custom, Team
+- Players: 2–10
+1. API Endpoint Overview
+REST API
+ Base URL
+https://localhost:7001/api
+
+
+Module	Endpoint Prefix	တာဝန်
+Auth	/api/auth	Register, Login
+Users	/api/users	User Profile
+Rooms	/api/rooms	Room Management
+Room Players	/api/rooms/{roomId}/players	Room Members
+Game Modes	/api/game-modes	Game Mode
+Games	/api/games	Game Management
+Game Players	/api/games/{gameId}/players	Game Players
+Game Actions	/api/games/{gameId}/actions	Play / Draw
+Game Rules	/api/games/{gameId}/rules	Game Settings
+Cards	/api/games/{gameId}/cards	Card Information
+History	/api/history	Match History
+Leaderboard	/api/leaderboard	Ranking
+Chat	/api/rooms/{roomId}/chats	Chat Messages
+
+2. Authentication Endpoints
+AuthController.cs
+Method	Endpoint	Description
+POST	/api/auth/register	Register Account
+POST	/api/auth/login	Login
+POST	/api/auth/refresh-token	Refresh JWT
+POST	/api/auth/logout	Logout
+POST	/api/auth/change-password	Change Password
+
+Example:
+POST /api/auth/register
+
+
+{
+  "username": "player01",
+  "email": "player@gmail.com",
+  "password": "Password123!"
+}
+
+
+3. Users Endpoints
+UsersController.cs
+Method	Endpoint	Description
+GET	/api/users/me	Current User
+GET	/api/users/{userId}	User Details
+PUT	/api/users/me	Update Profile
+PUT	/api/users/me/profile-image	Update Profile Image
+GET	/api/users/me/statistics	Player Statistics
+
+4. Game Room Endpoints
+RoomController.cs
+Method	Endpoint	Description
+POST	/api/rooms	Create Room
+GET	/api/rooms	Get Available Rooms
+GET	/api/rooms/{roomId}	Get Room Details
+GET	/api/rooms/code/{roomCode}	Find Room By Code
+PUT	/api/rooms/{roomId}	Update Room
+DELETE	/api/rooms/{roomId}	Close Room
+POST	/api/rooms/{roomId}/join	Join Room
+POST	/api/rooms/{roomId}/leave	Leave Room
+GET	/api/rooms/{roomId}/players	Get Room Players
+PUT	/api/rooms/{roomId}/ready	Ready / Unready
+POST	/api/rooms/{roomId}/kick/{userId}	Kick Player
+
+Create Room Example:
+POST /api/rooms
+
+
+{
+  "roomName": "My UNO Room",
+  "gameMode": "Classic",
+  "maxPlayers": 4,
+  "isPrivate": false
+}
+
+
+5. Game Mode Endpoints
+GameModeController.cs
+Method	Endpoint	Description
+GET	/api/game-modes	Get All Game Modes
+GET	/api/game-modes/{mode}	Get Mode Details
+GET	/api/game-modes/{mode}/rules	Get Mode Rules
+GET	/api/game-modes/{mode}/cards	Get Card Definitions
+
+Game Modes:
+Classic
+NoMercy
+Custom
+Team
+
+
+6. Game Endpoints
+GameController.cs
+Method	Endpoint	Description
+POST	/api/rooms/{roomId}/start	Start Game
+GET	/api/games/{gameId}	Get Game Details
+GET	/api/games/{gameId}/state	Get Game State
+GET	/api/games/{gameId}/players	Get Game Players
+POST	/api/games/{gameId}/pause	Pause Game
+POST	/api/games/{gameId}/resume	Resume Game
+POST	/api/games/{gameId}/forfeit	Forfeit Game
+GET	/api/games/{gameId}/result	Get Game Result
+
+7. Game Action Endpoints
+GameActionController.cs
+
+ဒီ Module က UNO Game ရဲ့ အဓိက API ဖြစ်ပါတယ်။
+Method	Endpoint	Description
+POST	/api/games/{gameId}/actions/play-card	Play Card
+POST	/api/games/{gameId}/actions/draw-card	Draw Card
+POST	/api/games/{gameId}/actions/call-uno	Call UNO
+POST	/api/games/{gameId}/actions/challenge	Challenge
+POST	/api/games/{gameId}/actions/choose-color	Choose Color
+POST	/api/games/{gameId}/actions/accept-penalty	Accept Penalty
+POST	/api/games/{gameId}/actions/catch-uno	Catch UNO
+GET	/api/games/{gameId}/actions	Get Action History
+
+Play Card Example:
+POST /api/games/1/actions/play-card
+
+
+{
+  "gameCardId": 25,
+  "chosenColor": "Red"
+}
+
+
+Draw Card Example:
+POST /api/games/1/actions/draw-card
+
+
+{
+  "drawCount": 1
+}
+
+
+drawCount ကို Client က အလိုရှိသလို သတ်မှတ်ခွင့်မပေးသင့်ပါဘူး။ Server က လက်ရှိ Rule နဲ့ Game State အရ ဆွဲရမယ့်အရေအတွက်ကို ဆုံးဖြတ်သင့်ပါတယ်။ အထက်ပါ Request က နမူနာအတွက်သာ ဖြစ်ပါတယ်။
+8. Game Rule Endpoints
+GameRuleController.cs
+Method	Endpoint	Description
+GET	/api/games/{gameId}/rules	Get Current Rules
+PUT	/api/games/{gameId}/rules	Update Rules
+GET	/api/games/{gameId}/rules/available	Available Rules
+
+Custom Rule Example:
+PUT /api/games/1/rules
+
+
+{
+  "rules": {
+    "stacking": true,
+    "sevenZero": true,
+    "jumpIn": false,
+    "startingCards": 7
+  }
+}
+
+
+Rules တွေကို Game မစခင်မှာပဲ ပြင်ခွင့်ပေးပါ။ Game စပြီးသွားရင် Rule Configuration ကို Lock လုပ်ထားသင့်ပါတယ်။
+9. Card Endpoints
+CardController.cs
+Method	Endpoint	Description
+GET	/api/games/{gameId}/cards/my-hand	Get My Cards
+GET	/api/games/{gameId}/cards/top-card	Get Top Discard Card
+GET	/api/games/{gameId}/cards/deck-count	Get Deck Count
+GET	/api/games/{gameId}/cards/discard-pile	Get Discard Pile
+
+အရေးကြီးတာက my-hand Endpoint မှာ Login ဝင်ထားတဲ့ Player ရဲ့ Card တွေကိုပဲ ပြန်ပေးရပါမယ်။ တခြား Player ရဲ့ လက်ထဲက Card တွေကို API ကနေ မမြင်နိုင်ရပါဘူး။
+10. Match History Endpoints
+HistoryController.cs
+Method	Endpoint	Description
+GET	/api/history	All Match History
+GET	/api/history/{matchId}	Match Details
+GET	/api/history/my-matches	My Match History
+GET	/api/history/{matchId}/players	Match Players
+GET	/api/history/{matchId}/actions	Match Actions
+
+11. Leaderboard Endpoints
+LeaderboardController.cs
+Method	Endpoint	Description
+GET	/api/leaderboard	Overall Ranking
+GET	/api/leaderboard/daily	Daily Ranking
+GET	/api/leaderboard/weekly	Weekly Ranking
+GET	/api/leaderboard/monthly	Monthly Ranking
+GET	/api/leaderboard/{userId}	Player Ranking
+
+12. Game Chat Endpoints
+ChatController.cs
+Method	Endpoint	Description
+GET	/api/rooms/{roomId}/chats	Get Chat Messages
+POST	/api/rooms/{roomId}/chats	Send Chat
+DELETE	/api/rooms/{roomId}/chats/{chatId}	Delete Own Message
+
+
+13. SignalR Real-Time Endpoints
+UNO Multiplayer ဖြစ်တဲ့အတွက် REST API တစ်ခုတည်းနဲ့ မလုံလောက်ပါဘူး။ Player တွေရဲ့ Game Actions တွေကို အချိန်နဲ့တစ်ပြေးညီ ပို့ဖို့ SignalR သုံးပါမယ်။
+SignalR Hub
+/api/hubs/game
+
+
+Direction	Event	Description
+Client → Server	JoinRoom	Join Room
+Client → Server	LeaveRoom	Leave Room
+Client → Server	SendChat	Send Message
+Server → Client	PlayerJoined	Player Joined
+Server → Client	PlayerLeft	Player Left
+Server → Client	PlayerReadyChanged	Ready Status Changed
+Server → Client	GameStarted	Game Started
+Server → Client	GameStateUpdated	Game Updated
+Server → Client	CardPlayed	Card Played
+Server → Client	CardDrawn	Card Drawn
+Server → Client	TurnChanged	Turn Changed
+Server → Client	PlayerEliminated	Player Eliminated
+Server → Client	GameFinished	Game Finished
+Server → Client	ReceiveChat	New Chat Message
+
+SignalR မှာ Client က Server ကို PlayCard လို Hub Method ခေါ်နိုင်ပေမဲ့ REST Endpoint နဲ့ တူညီတဲ့ Application Use Case ကို အသုံးပြုသင့်ပါတယ်။ Rule Validation ကို Hub ထဲမှာ သီးခြားထပ်မရေးပါနဲ့။
+
+14. API Development Order
+ဒီအစဉ်အတိုင်း တည်ဆောက်ရင် Dependency တွေကို လွယ်လွယ်ကူကူ စီမံနိုင်ပါတယ်။
+1. Authentication API
+   
+   Register, Login, JWT
+2. User API
+   
+   Profile, Statistics
+3. Room API
+   
+   Create, Join, Leave, Ready
+4. Game Mode API
+   
+   Classic, No Mercy, Custom, Team
+5. Game Engine
+   
+   Card, Rules, Turn, Validation
+6. Game Action API
+   
+   Play Card, Draw Card, Call UNO
+7. SignalR
+   
+   Real-time Game Updates
+8. History & Leaderboard
+   
+   Match Results, Ranking
